@@ -1,3 +1,4 @@
+/* algemeen CSS */
 html ,body {
     height: 100%;
     width: auto;
@@ -6,11 +7,31 @@ html ,body {
     font-family: Arial, sans-serif;
 }
 
+/* hoofdpagina */
 .Home-container {
     display: flex;
     display: inline;
 }
 
+footer {
+    display: block;
+}
+
+.foto img {
+    display: block; /* Voorkom extra ruimte rond inline-afbeeldingen */
+    height: auto; /* Houd de verhoudingen correct */
+    width: 55%;
+    margin: 0 auto; /* Center afbeelding binnen de container */
+}
+
+.foto-barber img {
+    display: block;
+    height: auto;
+    width: 25%;
+    margin-left: 70%;
+}
+
+/* Menu */
 .topnav {
     display: flex;
     box-sizing: border-box;
@@ -19,14 +40,6 @@ html ,body {
     overflow: hidden;
     background-color: #d6ddb1c7;
 }
-
-.foto img {
-    width: 55%;
-    height: auto; /* Houd de verhoudingen correct */
-    display: block; /* Voorkom extra ruimte rond inline-afbeeldingen */
-    margin: 0 auto; /* Center afbeelding binnen de container */
-}
-
 
 .topnav a {
     float: left;
@@ -48,6 +61,7 @@ html ,body {
     color: rgb(0, 0, 0);
 }
 
+/* Contact pagina */
 textarea, input[type="text"] {
     width: 100%;
     max-width: 500px;
@@ -78,10 +92,4 @@ input[type="submit"] {
     display: flex;
     padding: 50px;
     justify-content: center;
-}
-
-
-.homepagina {
-    display: block;
-    margin-right: auto;
 }
