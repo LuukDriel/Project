@@ -79,3 +79,9 @@ input[type="submit"] {
     padding: 50px;
     justify-content: center;
 }
+
+
+.homepagina {
+    display: block;
+    margin-right: auto;
+}
