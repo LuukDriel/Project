@@ -13,6 +13,10 @@ html ,body {
     display: inline;
 }
 
+footer {
+    display: block;
+}
+
 .foto img {
     display: block; /* Voorkom extra ruimte rond inline-afbeeldingen */
     height: auto; /* Houd de verhoudingen correct */
