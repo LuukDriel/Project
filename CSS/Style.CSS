@@ -94,6 +94,18 @@ input[type="submit"] {
     justify-content: center;
 }
 
+/* Specifieke stijl voor informatiegedeelte */
+.informatie_over_ons {
+    padding: 2rem;
+    border-bottom: 2px solid #f4f4f9;
+}
+
+.informatie_over_ons .highlight {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+
 /* Stijl voor het adresblok */
 .address {
     background-color: #333;
