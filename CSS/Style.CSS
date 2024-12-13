@@ -93,3 +93,12 @@ input[type="submit"] {
     padding: 50px;
     justify-content: center;
 }
+
+/* Stijl voor het adresblok */
+.address {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 0 0 8px 8px;
+}
