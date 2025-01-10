@@ -3,17 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Urban barber</title>
+    <title>Afspraak Maken - Urban Barber</title>
     <link rel="stylesheet" href="../CSS/Style.CSS">
+    <div class="topnav">
+        <div class="foto"><img src="/Assets/Barber-logo.png" alt="Barber-logo"></div>
+        <a href="/Index.html">Home</a>
+        <a class="active" href="/Pages/Afspraak.html">Afspraak maken</a>
+        <a href="/Pages/Prijzen.html">Prijzen</a>
+        <a href="/Pages/Overons.html">Over ons</a>
+        <a href="/Pages/Contact.html">Contact</a>
+    </div>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .topnav {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    height: 15%;
+    overflow: hidden;
+    background-color: #d6ddb1c7;
+}
+
+.topnav a {
+    float: left;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    max-width: min-content;
+}
+
+.topnav a:hover {
+    background-color: rgb(221, 221, 221);
+    color: black;
+}
+
+.topnav .active {
+    background-color: rgba(249, 255, 129, 0.443);
+    color: rgb(0, 0, 0);
+}
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 15px;
+            color: #555;
+        }
+        input, select, textarea {
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-    <div class="topnav">
-        <div class="foto"><img src="../Assets/Barber-logo.png" alt="Barber-logo"></div>
-        <a href="../Index.html">Home</a>
-        <a class="active" href="Afspraak.html">Afpraak maken</a>
-        <a href="Prijzen.html">Prijzen</a>
-        <a href="Overons.html">Over ons</a>
-        <a href="Contact.html">Contact</a>
+
+    <div class="container">
+        <h1>Afspraak Maken</h1>
+        <form action="" method="post">
+            <label for="name">Naam:</label>
+            <input type="text" id="name" name="name" placeholder="Vul je naam in" required>
+
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" placeholder="Vul je e-mail in" required>
+
+            <label for="phone">Telefoonnummer:</label>
+            <input type="tel" id="phone" name="phone" placeholder="Vul je telefoonnummer in" required>
+
+            <label for="date">Datum:</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="time">Tijd:</label>
+            <input type="time" id="time" name="time" required>
+
+            <label for="service">Behandeling:</label>
+            <select id="service" name="service" required>
+                <option value="knippen">Knippen</option>
+                <option value="wassen">Wassen en Föhnen</option>
+                <option value="verven">Verven</option>
+                <option value="baard">Baard trimmen</option>
+                <option value="ander">Anders</option>
+            </select>
+
+            <label for="notes">Opmerkingen:</label>
+            <textarea id="notes" name="notes" rows="4" placeholder="Eventuele opmerkingen"></textarea>
+
+            <button type="submit">Maak Afspraak</button>
+        </form>
     </div>
 </body>
 </html>

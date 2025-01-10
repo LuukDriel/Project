@@ -5,15 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Urban barber</title>
     <link rel="stylesheet" href="../CSS/Style.CSS">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 15px;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
     <div class="topnav">
         <div class="foto"><img src="../Assets/Barber-logo.png" alt="Barber-logo"></div>
         <a href="../Index.html">Home</a>
-        <a href="Afspraak.html">Afpraak maken</a>
+        <a href="Afspraak.html">Afspraak maken</a>
         <a class="active" href="Prijzen.html">Prijzen</a>
         <a href="Overons.html">Over ons</a>
         <a href="Contact.html">Contact</a>
+    </div>
+
+    <div class="prijslijst">
+        <h1>Kapper Prijslijst</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Behandeling</th>
+                    <th>Prijs</th>
+                    <th>Alcoholische Drank</th>
+                    <th>Prijs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Knippen - Volwassenen</td>
+                    <td>&euro; 25,00</td>
+                    <td>Bier</td>
+                    <td>&euro; 3,50</td>
+                </tr>
+                <tr>
+                    <td>Knippen - Kinderen</td>
+                    <td>&euro; 15,00</td>
+                    <td>Wijn (glas)</td>
+                    <td>&euro; 4,00</td>
+                </tr>
+                <tr>
+                    <td>Wassen en Föhnen</td>
+                    <td>&euro; 20,00</td>
+                    <td>Whisky</td>
+                    <td>&euro; 7,00</td>
+                </tr>
+                <tr>
+                    <td>Highlights</td>
+                    <td>&euro; 50,00</td>
+                    <td>Champagne (glas)</td>
+                    <td>&euro; 8,00</td>
+                </tr>
+                <tr>
+                    <td>Verven</td>
+                    <td>&euro; 40,00</td>
+                    <td>Cocktail</td>
+                    <td>&euro; 9,00</td>
+                </tr>
+                <tr>
+                    <td>Baard trimmen</td>
+                    <td>&euro; 10,00</td>
+                    <td>Gin-tonic</td>
+                    <td>&euro; 6,50</td>
+                </tr>
+                <tr>
+                    <td>Haarverzorgingspakket</td>
+                    <td>&euro; 70,00</td>
+                    <td>Rum-cola</td>
+                    <td>&euro; 6,50</td>
+                </tr>
+                <tr>
+                    <td>Haaruitval behandeling</td>
+                    <td>&euro; 90,00</td>
+                    <td>Tequila</td>
+                    <td>&euro; 5,00</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

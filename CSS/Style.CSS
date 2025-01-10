@@ -1,3 +1,4 @@
+/* algemeen CSS */
 html ,body {
     height: 100%;
     width: auto;
@@ -6,6 +7,7 @@ html ,body {
     font-family: Arial, sans-serif;
 }
 
+/* hoofdpagina */
 .Home-container {
     display: flex;
     align-items: center;
@@ -13,6 +15,25 @@ html ,body {
     padding: 20px;
 }
 
+footer {
+    display: block;
+}
+
+.foto img {
+    display: block; /* Voorkom extra ruimte rond inline-afbeeldingen */
+    height: auto; /* Houd de verhoudingen correct */
+    width: 55%;
+    margin: 0 auto; /* Center afbeelding binnen de container */
+}
+
+.foto-barber img {
+    display: block;
+    height: auto;
+    width: 25%;
+    margin-left: 70%;
+}
+
+/* Menu */
 .topnav {
     display: flex;
     box-sizing: border-box;
@@ -21,14 +42,6 @@ html ,body {
     overflow: hidden;
     background-color: #d6ddb1c7;
 }
-
-.foto img {
-    width: 55%;
-    height: auto; /* Houd de verhoudingen correct */
-    display: block; /* Voorkom extra ruimte rond inline-afbeeldingen */
-    margin: 0 auto; /* Center afbeelding binnen de container */
-}
-
 
 .topnav a {
     float: left;
@@ -50,7 +63,8 @@ html ,body {
     color: rgb(0, 0, 0);
 }
 
-textarea, input[type="text"] {
+/* Contact pagina */
+.contact textarea, input[type="text"] {
     width: 100%;
     max-width: 500px;
     padding: 12px 20px;
@@ -63,7 +77,7 @@ textarea, input[type="text"] {
 }
 
 /* Styling voor submit knop */
-input[type="submit"] {
+.contact input[type="submit"] {
     width: 100%;
     max-width: 500px;
     padding: 15px 0;
@@ -82,10 +96,29 @@ input[type="submit"] {
     justify-content: center;
 }
 
+/* Specifieke stijl voor informatiegedeelte */
+.informatie_over_ons {
+    padding: 2rem;
+    border-bottom: 2px solid #f4f4f9;
+}
 
 .homepagina {
     width: 55%;
     height: 55%;
     display: block; 
     margin: 0 auto;
+}
+.informatie_over_ons .highlight {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+
+/* Stijl voor het adresblok */
+.address {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 0 0 8px 8px;
 }
