@@ -62,7 +62,7 @@ footer {
 }
 
 /* Contact pagina */
-textarea, input[type="text"] {
+.contact textarea, input[type="text"] {
     width: 100%;
     max-width: 500px;
     padding: 12px 20px;
@@ -75,7 +75,7 @@ textarea, input[type="text"] {
 }
 
 /* Styling voor submit knop */
-input[type="submit"] {
+.contact input[type="submit"] {
     width: 100%;
     max-width: 500px;
     padding: 15px 0;
@@ -102,26 +102,28 @@ input[type="submit"] {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-h1 {
+.afspraak-container h1 {
     text-align: center;
     color: #333;
 }
-form {
+.afspraak-container form {
     display: flex;
     flex-direction: column;
 }
-label {
+.afspraak-container label {
     margin-top: 15px;
     color: #555;
 }
-.afspraak-container, input, select, textarea {
+.afspraak-container input,
+.afspraak-container select,
+.afspraak-container textarea {
     margin-top: 5px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
 }
-button {
+.afspraak-container button {
     margin-top: 20px;
     padding: 10px;
     background-color: #28a745;
@@ -131,6 +133,6 @@ button {
     font-size: 16px;
     cursor: pointer;
 }
-button:hover {
+.afspraak-container button:hover {
     background-color: #218838;
 }
