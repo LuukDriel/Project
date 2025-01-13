@@ -10,7 +10,7 @@ html ,body {
 /* hoofdpagina */
 .Home-container {
     display: flex;
-    align-items: center;
+    align-items: column;
     justify-content: space-between;
     padding: 20px;
 }
@@ -29,8 +29,15 @@ footer {
 .foto-barber img {
     display: block;
     height: auto;
-    width: 25%;
-    margin-left: 70%;
+    width: 45%;
+    margin-left: 40%;
+}
+
+.foto-barber2 img {
+    display: block;
+    height: auto;
+    width: 180%;
+    margin-left: 40%;
 }
 
 /* Menu */
@@ -102,12 +109,6 @@ footer {
     border-bottom: 2px solid #f4f4f9;
 }
 
-.homepagina {
-    width: 55%;
-    height: 55%;
-    display: block; 
-    margin: 0 auto;
-}
 .informatie_over_ons .highlight {
     color: #c0392b;
     font-weight: bold;
