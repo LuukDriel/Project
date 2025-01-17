@@ -71,36 +71,32 @@ footer {
 }
 
 /* Contact pagina */
-.contact textarea, input[type="text"] {
-    width: 100%;
-    max-width: 500px;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    margin-bottom: 10px;
-    resize: none;
+.Contact-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-/* Styling voor submit knop */
-.contact input[type="submit"] {
-    width: 100%;
-    max-width: 500px;
-    padding: 15px 0;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 12px;
-    background-color: green;
-    color: white;
-    font-size: 1.1rem;
-    cursor: pointer;
+h1 {
+    text-align: center;
+    color: #333;
 }
-
-.contact {
+form {
     display: flex;
-    padding: 50px;
-    justify-content: center;
+    flex-direction: column;
+}
+label {
+    margin-top: 15px;
+    color: #555;
+}
+input, select, textarea {
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
 }
 
 /* Specifieke stijl voor informatiegedeelte */
