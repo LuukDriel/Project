@@ -11,3 +11,7 @@ function showSettings() {
     settingsModal.show();
 }
 
+document.getElementById("muziekSlider").addEventListener("input", function(e) {
+    var audio = document.querySelector("audio");
+    audio.volume = e.target.value / 100;
+});
