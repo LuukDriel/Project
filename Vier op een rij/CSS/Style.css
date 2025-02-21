@@ -4,6 +4,7 @@ body {
     text-align: center;
     padding: 50px;
 }
+
 .menu {
     background-color: #fff;
     padding: 20px;
@@ -36,3 +37,33 @@ body {
 audio {
     display: none;
 }
+
+#board {
+    height: 540px;
+    width: 630px;
+    background-color: blue;
+    border: 10px solid navy;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tile {
+    height: 70px;
+    width: 70px;
+    margin: 5px;
+    background-color: white;
+    border-radius: 50%;
+    border: 5px solid navy;
+    cursor: pointer;
+}
+
+.red-piece {
+    background-color: red;
+}
+
+.yellow-piece {
+    background-color: yellow;
+}
+
