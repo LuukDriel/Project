@@ -1,5 +1,5 @@
 function startGame() {
-    alert("Starting the game...");
+    window.location.href = "pages/spel.html";
 }
 
 function showInstructions() {
