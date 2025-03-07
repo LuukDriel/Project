@@ -1,5 +1,3 @@
-
-
 var playerRed = "R";
 var playerYellow = "Y";
 var currPlayer = playerRed;
@@ -127,4 +125,16 @@ function setWinner(r, c) {
         winner.innerText = "Yellow Wins";
     }
     gameOver = true;
+}
+
+function resetGame() {
+    document.getElementById("board").innerHTML = "";
+    document.getElementById("winner").innerText = "";
+    gameOver = false;
+    currPlayer = playerRed;
+    setGame();
+}
+
+function goToMenu() {
+    window.location.href = "../index.html";
 }
