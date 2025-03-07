@@ -32,3 +32,22 @@ body {
 .yellow-piece {
     background-color: yellow;
 }
+
+.power-up-indicator {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: yellow;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-weight: bold;
+    display: none;
+    z-index: 1000;
+}
+
+.tile-breaker-active {
+    cursor: pointer;
+    border: 2px dashed red;
+}
