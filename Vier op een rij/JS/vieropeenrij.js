@@ -7,7 +7,9 @@ var board;
 
 var rows = 6;
 var columns = 7;
-var currColumns = []; //keeps track of which row each column is at.
+var currColumns = [];
+
+var tileBreakerActive = false;
 
 window.onload = function() {
     setGame();
@@ -20,9 +22,9 @@ function setGame() {
     for (let r = 0; r < rows; r++) {
         let row = [];
         for (let c = 0; c < columns; c++) {
-            // JS
+            
             row.push(' ');
-            // HTML
+            
             let tile = document.createElement("div");
             tile.id = r.toString() + "-" + c.toString();
             tile.classList.add("tile");
@@ -38,19 +40,25 @@ function setPiece() {
         return;
     }
 
-    //get coords of that tile clicked
+    if (tileBreakerActive) {
+        // breek een blok
+        breakTile(this);
+        return;
+    }
+
+    //kijkt welk blok geklikt is
     let coords = this.id.split("-");
     let r = parseInt(coords[0]);
     let c = parseInt(coords[1]);
 
-    // figure out which row the current column should be on
+    // kijkt of het blok leeg is
     r = currColumns[c]; 
 
-    if (r < 0) { // board[r][c] != ' '
+    if (r < 0) { //als het blok vol is
         return;
     }
 
-    board[r][c] = currPlayer; //update JS board
+    board[r][c] = currPlayer; //update het bord
     let tile = document.getElementById(r.toString() + "-" + c.toString());
     if (currPlayer == playerRed) {
         tile.classList.add("red-piece");
@@ -61,14 +69,15 @@ function setPiece() {
         currPlayer = playerRed;
     }
 
-    r -= 1; //update the row height for that column
-    currColumns[c] = r; //update the array
+    r -= 1; //beweegt naar het volgende blok
+    currColumns[c] = r; //update de array
 
     checkWinner();
+    triggerPowerUp(); // checkt voor power-ups
 }
 
 function checkWinner() {
-     // horizontal
+     // horizontaal
      for (let r = 0; r < rows; r++) {
          for (let c = 0; c < columns - 3; c++){
             if (board[r][c] != ' ') {
@@ -80,7 +89,7 @@ function checkWinner() {
          }
     }
 
-    // vertical
+    // verticaal
     for (let c = 0; c < columns; c++) {
         for (let r = 0; r < rows - 3; r++) {
             if (board[r][c] != ' ') {
@@ -92,7 +101,7 @@ function checkWinner() {
         }
     }
 
-    // anti diagonal
+    // diagonaal
     for (let r = 0; r < rows - 3; r++) {
         for (let c = 0; c < columns - 3; c++) {
             if (board[r][c] != ' ') {
@@ -104,7 +113,7 @@ function checkWinner() {
         }
     }
 
-    // diagonal
+    // omgekeerd diagonaal
     for (let r = 3; r < rows; r++) {
         for (let c = 0; c < columns - 3; c++) {
             if (board[r][c] != ' ') {
@@ -125,16 +134,4 @@ function setWinner(r, c) {
         winner.innerText = "Yellow Wins";
     }
     gameOver = true;
-}
-
-function resetGame() {
-    document.getElementById("board").innerHTML = "";
-    document.getElementById("winner").innerText = "";
-    gameOver = false;
-    currPlayer = playerRed;
-    setGame();
-}
-
-function goToMenu() {
-    window.location.href = "../index.html";
 }
