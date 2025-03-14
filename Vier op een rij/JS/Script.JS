@@ -1,7 +1,7 @@
 // Menu pagina functies
 function startGame() {
     window.location.href = "pages/spel.html";
-    setGame();
+    // setGame(); // Removed as it is not defined in this file
 }
 
 function showInstructions() {
