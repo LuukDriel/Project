@@ -144,11 +144,11 @@ var rotationDegrees = 0;
 function triggerPowerUp() {
     // Randomly activate a power-up
     let powerUpChance = Math.random();
-    if (powerUpChance < 0.2) { // 20% chance to activate tile breaker
+    if (powerUpChance < 0.15) { // 15% chance to activate tile breaker
         tileBreakerActive = true;
         document.getElementById("board").classList.add("tile-breaker-active");
         alert("Tile Breaker Activated! Click on a tile to break it.");
-    } else if (powerUpChance < 0.4) { // 20% chance to activate board rotation
+    } else if (powerUpChance < 0.3) { // 20% chance to activate board rotation
         rotateBoard();
     }
 }
