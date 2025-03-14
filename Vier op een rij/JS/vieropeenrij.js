@@ -50,6 +50,9 @@ function setPiece() {
     let r = parseInt(coords[0]);
     let c = parseInt(coords[1]);
 
+    // Play the sound
+    document.getElementById("placePieceSound").play();
+    
     // kijkt of het blok leeg is
     r = currColumns[c]; 
 
