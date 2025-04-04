@@ -5,7 +5,8 @@ function startGame() {
 }
 
 function showInstructions() {
-    // Implement instructions modal if needed
+    var instructionsModal = new bootstrap.Modal(document.getElementById('instructionsModal'));
+    instructionsModal.show();
 }
 
 function showSettings() {
