@@ -3,15 +3,15 @@ body {
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
-    overflow-y: auto; /* Sta verticale scroll toe */
+    background-color: #f8f9fa;
 }
 
 #board {
-    height: 580px;
-    width: 630px;
+    max-width: 630px;px;
+    height: 540px;;
     background-color: blue;
     border: 10px solid navy;
-    margin: 0 auto;
+    margin: 20px auto;
     display: flex;
     flex-wrap: wrap;
     overflow: hidden;
@@ -21,11 +21,10 @@ body {
     height: 70px;
     width: 70px;
     margin: 5px;
-
-    /* Circle */
     background-color: white;
     border-radius: 50%;
     border: 5px solid navy;
+    cursor: pointer;
 }
 
 .red-piece {
@@ -37,41 +36,28 @@ body {
 }
 
 .power-up-indicator {
-    position: absolute;
-    top: 10px;
+    position: fixed;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: yellow;
-    padding: 10px;
-    border: 2px solid black;
-    border-radius: 5px;
-    font-weight: bold;
-    display: none;
-    z-index: 1000;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    z-index: 1050;
 }
 
+/* Animatie voor een individuele tegel (tilebreaker) */
+.tile-breaker-animation {
+    animation: tileBreakerBlink 0.5s ease-out forwards;
+}
+
+/* Visuele indicator voor een actieve tilebreaker power-up op het bord */
 .tile-breaker-active {
     animation: tileBreakerBlink 1s infinite;
     border: 2px dashed red;
 }
 
 @keyframes tileBreakerBlink {
-    0% { background-color: blue; }
+    0% { background-color: inherit; }
     50% { background-color: red; }
-    100% { background-color: blue; }
-}
-
-.rotate-90 {
-    transform: rotate(90deg);
-    transition: transform 0.5s ease-in-out;
-}
-
-.rotate-180 {
-    transform: rotate(180deg);
-    transition: transform 0.5s ease-in-out;
-}
-
-.rotate-270 {
-    transform: rotate(270deg);
-    transition: transform 0.5s ease-in-out;
+    100% { background-color: inherit; }
 }
