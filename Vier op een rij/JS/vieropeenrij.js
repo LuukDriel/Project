@@ -1,14 +1,13 @@
 var playerRed = "R";
 var playerYellow = "Y";
 var currPlayer = playerRed;
-
 var gameOver = false;
 var board;
-
-var rows = 7; // Verhoogd van 6 naar 7
+var rows = 6;
 var columns = 7;
 var currColumns = [];
-
+var tileBombActive = false;
+var gravityInvertedActive = false;
 var tileBreakerActive = false;
 
 window.onload = function() {
@@ -17,17 +16,16 @@ window.onload = function() {
     setupSettings();
 }
 
+// Initialiseert het spelbord en maakt de tegels
 function setGame() {
     board = [];
-    currColumns = Array(columns).fill(rows - 1); // Update de hoogte van elke kolom
-
+    currColumns = Array(columns).fill(rows - 1);
     for (let r = 0; r < rows; r++) {
         let row = [];
         for (let c = 0; c < columns; c++) {
             row.push(' ');
-
             let tile = document.createElement("div");
-            tile.id = r.toString() + "-" + c.toString();
+            tile.id = r + "-" + c;
             tile.classList.add("tile");
             tile.addEventListener("click", setPiece);
             document.getElementById("board").append(tile);
@@ -36,52 +34,47 @@ function setGame() {
     }
 }
 
+// Stelt volume-instellingen in voor geluiden
 function setupVolumeControl() {
     const placePieceSound = document.getElementById('placePieceSound');
     const soundEffectsVolume = localStorage.getItem('soundEffectsVolume') || 100;
     placePieceSound.volume = soundEffectsVolume / 100;
 }
 
+// Configureert de spelinstellingen (bijv. volumeslider)
 function setupSettings() {
     const volumeSlider = document.getElementById('volumeSlider');
     if (volumeSlider) {
         volumeSlider.addEventListener('input', function() {
             localStorage.setItem('soundEffectsVolume', this.value);
         });
-
-        // Set initial slider value from local storage
         volumeSlider.value = localStorage.getItem('soundEffectsVolume') || 100;
     }
 }
 
+// Plaatst een steen of activeert een power-up bij klikken
 function setPiece() {
-    if (gameOver) {
+    if (gameOver) return;
+    if (tileBombActive) {
+        activateTileBomb(this);
+        tileBombActive = false;
+        document.getElementById("board").classList.remove("tile-bomb-active");
         return;
     }
-
     if (tileBreakerActive) {
-        // breek een blok
-        breakTile(this);
+        activateTileBreaker(this);
+        tileBreakerActive = false;
+        document.getElementById("board").classList.remove("tile-breaker-active");
         return;
     }
-
-    //kijkt welk blok geklikt is
     let coords = this.id.split("-");
     let r = parseInt(coords[0]);
     let c = parseInt(coords[1]);
-
-    // Play the sound
     document.getElementById("placePieceSound").play();
-    
-    // kijkt of het blok leeg is
-    r = currColumns[c]; 
-
-    if (r < 0) { //als het blok vol is
-        return;
-    }
-
-    board[r][c] = currPlayer; //update het bord
-    let tile = document.getElementById(r.toString() + "-" + c.toString());
+    r = currColumns[c];
+    if (r < 0) return;
+    board[r][c] = currPlayer;
+    let tile = document.getElementById(r + "-" + c);
     if (currPlayer === playerRed) {
         tile.classList.add("red-piece");
         currPlayer = playerYellow;
@@ -89,223 +82,108 @@ function setPiece() {
         tile.classList.add("yellow-piece");
         currPlayer = playerRed;
     }
-
-    r -= 1; //beweegt naar het volgende blok
-    currColumns[c] = r; //update de array
-
+    currColumns[c] = r - 1;
     checkWinner();
-    applyGravity(); // Zorg ervoor dat schijven naar beneden vallen
-    triggerPowerUp(); // checkt voor power-ups
+    applyGravity();
+    triggerRandomPower();
 }
 
+// Past zwaartekracht aan: standaard (naar beneden) of omgekeerd (omhoog)
 function applyGravity() {
-    for (let c = 0; c < columns; c++) {
-        let emptyRow = rows - 1; // Begin bij de onderste rij
-        for (let r = rows - 1; r >= 0; r--) {
-            if (board[r][c] !== ' ') { // Als er een schijf is
-                if (r !== emptyRow) { // Als de schijf niet al op de onderste positie is
-                    board[emptyRow][c] = board[r][c]; // Verplaats de schijf naar de onderste positie
-                    board[r][c] = ' '; // Maak de oude positie leeg
+    if (gravityInvertedActive) {
+        for (let c = 0; c < columns; c++) {
+            let emptyRow = 0;
+            for (let r = 0; r < rows; r++) {
+                if (board[r][c] !== ' ') {
+                    if (r !== emptyRow) {
+                        board[emptyRow][c] = board[r][c];
+                        board[r][c] = ' ';
+                    }
+                    emptyRow++;
                 }
-                emptyRow--; // Ga naar de volgende beschikbare positie
+            }
+        }
+    } else {
+        for (let c = 0; c < columns; c++) {
+            let emptyRow = rows - 1;
+            for (let r = rows - 1; r >= 0; r--) {
+                if (board[r][c] !== ' ') {
+                    if (r !== emptyRow) {
+                        board[emptyRow][c] = board[r][c];
+                        board[r][c] = ' ';
+                    }
+                    emptyRow--;
+                }
             }
         }
     }
-    updateVisualBoard(); // Werk de visuele representatie van het bord bij
+    updateVisualBoard();
 }
 
+// Controleert of er vier opeenvolgende stenen van dezelfde speler liggen
 function checkWinner() {
-    // horizontaal
+    // Horizontaal
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < columns - 3; c++) {
-            if (board[r][c] != ' ') {
-                if (board[r][c] == board[r][c + 1] && board[r][c + 1] == board[r][c + 2] && board[r][c + 2] == board[r][c + 3]) {
-                    setWinner(r, c);
-                    return;
-                }
+            if (board[r][c] !== ' ' &&
+                board[r][c] === board[r][c + 1] &&
+                board[r][c + 1] === board[r][c + 2] &&
+                board[r][c + 2] === board[r][c + 3]) {
+                setWinner(r, c);
+                return;
             }
         }
     }
-
-    // verticaal
+    // Verticaal
     for (let c = 0; c < columns; c++) {
         for (let r = 0; r < rows - 3; r++) {
-            if (board[r][c] != ' ') {
-                if (board[r][c] == board[r + 1][c] && board[r + 1][c] == board[r + 2][c] && board[r + 2][c] == board[r + 3][c]) {
-                    setWinner(r, c);
-                    return;
-                }
+            if (board[r][c] !== ' ' &&
+                board[r][c] === board[r + 1][c] &&
+                board[r + 1][c] === board[r + 2][c] &&
+                board[r + 2][c] === board[r + 3][c]) {
+                setWinner(r, c);
+                return;
             }
         }
     }
-
-    // diagonaal
+    // Diagonaal (\)
     for (let r = 0; r < rows - 3; r++) {
         for (let c = 0; c < columns - 3; c++) {
-            if (board[r][c] != ' ') {
-                if (board[r][c] == board[r + 1][c + 1] && board[r + 1][c + 1] == board[r + 2][c + 2] && board[r + 2][c + 2] == board[r + 3][c + 3]) {
-                    setWinner(r, c);
-                    return;
-                }
+            if (board[r][c] !== ' ' &&
+                board[r][c] === board[r + 1][c + 1] &&
+                board[r + 1][c + 1] === board[r + 2][c + 2] &&
+                board[r + 2][c + 2] === board[r + 3][c + 3]) {
+                setWinner(r, c);
+                return;
             }
         }
     }
-
-    // omgekeerd diagonaal
+    // Diagonaal (/)
     for (let r = 3; r < rows; r++) {
         for (let c = 0; c < columns - 3; c++) {
-            if (board[r][c] != ' ') {
-                if (board[r][c] == board[r - 1][c + 1] && board[r - 1][c + 1] == board[r - 2][c + 2] && board[r - 2][c + 2] == board[r - 3][c + 3]) {
-                    setWinner(r, c);
-                    return;
-                }
+            if (board[r][c] !== ' ' &&
+                board[r][c] === board[r - 1][c + 1] &&
+                board[r - 1][c + 1] === board[r - 2][c + 2] &&
+                board[r - 2][c + 2] === board[r - 3][c + 3]) {
+                setWinner(r, c);
+                return;
             }
         }
     }
 }
 
+// Bepaalt de winnaar en stopt het spel
 function setWinner(r, c) {
     let winner = document.getElementById("winner");
-    if (board[r][c] == playerRed) {
-        winner.innerText = "Red Wins";             
-    } else {
-        winner.innerText = "Yellow Wins";
-    }
+    winner.innerText = (board[r][c] === playerRed) ? "Red Wins" : "Yellow Wins";
     gameOver = true;
 }
 
-// Define the triggerPowerUp function
-var rotationDegrees = 0;
-
-function triggerPowerUp() {
-    // Randomly activate a power-up
-    let powerUpChance = Math.random();
-    if (powerUpChance < 0.15) { // 15% chance to activate tile breaker
-        tileBreakerActive = true;
-        document.getElementById("board").classList.add("tile-breaker-active");
-        alert("Tile Breaker Activated! Click on a tile to break it.");
-    } else if (powerUpChance < 0.3) { // 20% chance to activate board rotation
-        rotateBoard();
-    }
-}
-
-function rotateBoard() {
-    rotationDegrees = (rotationDegrees + 90) % 360; // Houd de rotatiehoek bij
-    let newBoard = Array.from({ length: rows }, () => Array(columns).fill(' '));
-
-    // Bereken de nieuwe posities van de schijven na rotatie
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns; c++) {
-            if (board[r][c] !== ' ') {
-                let newR, newC;
-                if (rotationDegrees === 90) {
-                    newR = c;
-                    newC = rows - 1 - r;
-                } else if (rotationDegrees === 180) {
-                    newR = rows - 1 - r;
-                    newC = columns - 1 - c;
-                } else if (rotationDegrees === 270) {
-                    newR = columns - 1 - c;
-                    newC = r;
-                } else {
-                    newR = r;
-                    newC = c;
-                }
-
-                newBoard[newR][newC] = board[r][c];
-            }
-        }
-    }
-
-    board = newBoard; // Update het bord
-    applyGravity(); // Pas zwaartekracht toe na rotatie
-}
-
-function updateBoardAfterRotation() {
-    let newBoard = Array.from({ length: rows }, () => Array(columns).fill(' '));
-
-    // Bereken de nieuwe posities van de schijven na rotatie
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns; c++) {
-            if (board[r][c] !== ' ') {
-                let newR, newC;
-                if (rotationDegrees === 90) {
-                    newR = c;
-                    newC = rows - 1 - r;
-                } else if (rotationDegrees === 180) {
-                    newR = rows - 1 - r;
-                    newC = columns - 1 - c;
-                } else if (rotationDegrees === 270) {
-                    newR = columns - 1 - c;
-                    newC = r;
-                } else {
-                    newR = r;
-                    newC = c;
-                }
-
-                newBoard[newR][newC] = board[r][c];
-            }
-        }
-    }
-
-    board = newBoard;
-}
-
-function applyGravityToNewBottom() {
-    let newBoard = Array.from({ length: rows }, () => Array(columns).fill(' '));
-
-    for (let c = 0; c < columns; c++) {
-        let emptyRow = rows - 1; // Begin bij de onderste rij
-        for (let r = rows - 1; r >= 0; r--) {
-            if (board[r][c] !== ' ') {
-                newBoard[emptyRow][c] = board[r][c]; // Verplaats de schijf naar de onderste beschikbare rij
-                emptyRow--; // Ga naar de volgende beschikbare rij
-            }
-        }
-    }
-
-    board = newBoard;
-    updateVisualBoard(); // Werk de visuele representatie van het bord bij
-}
-
-function breakTile(tile) {
-    let coords = tile.id.split("-");
-    let r = parseInt(coords[0]);
-    let c = parseInt(coords[1]);
-
-    if (board[r][c] != ' ') {
-        board[r][c] = ' '; // Clear the tile on the board
-        tile.classList.remove("red-piece", "yellow-piece"); // Remove the piece visually
-
-        // Make tiles above fall down
-        for (let i = r; i > 0; i--) {
-            board[i][c] = board[i - 1][c];
-            let aboveTile = document.getElementById((i - 1).toString() + "-" + c.toString());
-            let currentTile = document.getElementById(i.toString() + "-" + c.toString());
-            if (board[i][c] == playerRed) {
-                currentTile.classList.add("red-piece");
-                currentTile.classList.remove("yellow-piece");
-            } else if (board[i][c] == playerYellow) {
-                currentTile.classList.add("yellow-piece");
-                currentTile.classList.remove("red-piece");
-            } else {
-                currentTile.classList.remove("red-piece", "yellow-piece");
-            }
-        }
-        board[0][c] = ' '; // Clear the topmost tile
-        let topTile = document.getElementById("0-" + c.toString());
-        topTile.classList.remove("red-piece", "yellow-piece");
-
-        currColumns[c]++; // Update the column height
-        tileBreakerActive = false; // Deactivate tile breaker
-        document.getElementById("board").classList.remove("tile-breaker-active");
-    }
-}
-
+// Update de visuele weergave van het bord
 function updateVisualBoard() {
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < columns; c++) {
-            let tile = document.getElementById(r.toString() + "-" + c.toString());
+            let tile = document.getElementById(r + "-" + c);
             tile.classList.remove("red-piece", "yellow-piece");
             if (board[r][c] === playerRed) {
                 tile.classList.add("red-piece");
@@ -313,5 +191,111 @@ function updateVisualBoard() {
                 tile.classList.add("yellow-piece");
             }
         }
+    }
+}
+
+// Activeert de tile bomb power-up en wist de omliggende tegels
+function activateTileBomb(tile) {
+    let coords = tile.id.split("-");
+    let r = parseInt(coords[0]);
+    let c = parseInt(coords[1]);
+    for (let i = r - 1; i <= r + 1; i++) {
+        for (let j = c - 1; j <= c + 1; j++) {
+            if (i >= 0 && i < rows && j >= 0 && j < columns && board[i][j] !== ' ') {
+                board[i][j] = ' ';
+                let affectedTile = document.getElementById(i + "-" + j);
+                affectedTile.classList.remove("red-piece", "yellow-piece");
+            }
+        }
+    }
+    updateVisualBoard();
+}
+
+// Nieuwe functie: verwijdert enkel de aangeklikte tegel (tilebreaker) met animatie
+function activateTileBreaker(tile) {
+    // Voeg de animatieklasse toe aan de tegel
+    tile.classList.add("tile-breaker-animation");
+    
+    // Wacht tot de animatie is afgelopen (bijvoorbeeld 500ms) en verwijder dan de tegel
+    setTimeout(() => {
+        let coords = tile.id.split("-");
+        let r = parseInt(coords[0]);
+        let c = parseInt(coords[1]);
+        if (board[r][c] !== ' ') {
+            board[r][c] = ' ';
+            tile.classList.remove("red-piece", "yellow-piece");
+        }
+        applyGravity();
+        // Verwijder de animatieklasse zodat deze de volgende keer opnieuw kan worden getriggerd
+        tile.classList.remove("tile-breaker-animation");
+    }, 500);
+}
+
+// Geeft de huidige speler een extra beurt
+function activateExtraTurn() {
+    displayMessage("Extra beurt! Jij mag nogmaals spelen.");
+}
+
+// Toggle voor zwaartekrachtomkering die actief blijft tot herhaaldelijk activeren
+function activateGravityInverter() {
+    gravityInvertedActive = !gravityInvertedActive;
+    applyGravity();
+    displayMessage(gravityInvertedActive ? "Gravity Inverted! De stenen bewegen nu omhoog." : "Standaard zwaartekracht hersteld!");
+}
+
+// Schudt de stukken in een kolom willekeurig
+function shuffleColumn(colIndex) {
+    let pieces = [];
+    for (let r = 0; r < rows; r++) {
+        if (board[r][colIndex] !== ' ') {
+            pieces.push(board[r][colIndex]);
+            board[r][colIndex] = ' ';
+        }
+    }
+    for (let i = pieces.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+    }
+    let emptyRow = rows - 1;
+    while (pieces.length) {
+        board[emptyRow][colIndex] = pieces.pop();
+        emptyRow--;
+    }
+    updateVisualBoard();
+    displayMessage("Kolom " + (colIndex + 1) + " is gehusseld!");
+}
+
+// Dynamisch bericht weergeven in de indicator met een timeout waarin klikken niet mogelijk is
+function displayMessage(msg) {
+    let indicator = document.getElementById("power-up-indicator");
+    if (indicator) {
+        indicator.textContent = msg;
+        indicator.classList.remove("d-none");
+        indicator.style.pointerEvents = "none";  // blokkeren van klikken
+        setTimeout(() => {
+            indicator.classList.add("d-none");
+            indicator.style.pointerEvents = "auto"; // klikfunctie weer toestaan
+        }, 3000);
+    }
+}
+
+// Activeert een willekeurige power-up of power-down
+function triggerRandomPower() {
+    let rand = Math.random();
+    if (rand < 0.10) {
+        displayMessage("Tile Bomb power-up! Klik op een tegel om de bom te activeren.");
+        tileBombActive = true;
+        document.getElementById("board").classList.add("tile-bomb-active");
+    } else if (rand < 0.20) {
+        displayMessage("Tile Breaker power-up! Klik op een tegel om deze te breken.");
+        tileBreakerActive = true;
+        document.getElementById("board").classList.add("tile-breaker-active");
+    } else if (rand < 0.30) {
+        activateExtraTurn();
+    } else if (rand < 0.40) {
+        activateGravityInverter();
+    } else if (rand < 0.50) {
+        let col = Math.floor(Math.random() * columns);
+        shuffleColumn(col);
     }
 }
