@@ -18,19 +18,24 @@ window.onload = function() {
 
 // Initialiseert het spelbord en maakt de tegels
 function setGame() {
-    board = [];
+    // Maak een lege array voor het bord
+    board = Array.from({ length: rows }, () => Array(columns).fill(' '));
+
+    // Reset de huidige kolommen (laatste beschikbare rij in elke kolom)
     currColumns = Array(columns).fill(rows - 1);
+
+    // Maak het visuele bord
+    const boardElement = document.getElementById("board");
+    boardElement.innerHTML = ""; // Leeg het bord-element
+
     for (let r = 0; r < rows; r++) {
-        let row = [];
         for (let c = 0; c < columns; c++) {
-            row.push(' ');
             let tile = document.createElement("div");
-            tile.id = r + "-" + c;
+            tile.id = `${r}-${c}`;
             tile.classList.add("tile");
             tile.addEventListener("click", setPiece);
-            document.getElementById("board").append(tile);
+            boardElement.append(tile);
         }
-        board.push(row);
     }
 }
 
@@ -203,8 +208,13 @@ function activateTileBomb(tile) {
         for (let j = c - 1; j <= c + 1; j++) {
             if (i >= 0 && i < rows && j >= 0 && j < columns && board[i][j] !== ' ') {
                 board[i][j] = ' ';
-                let affectedTile = document.getElementById(i + "-" + j);
+                let affectedTile = document.getElementById(`${i}-${j}`);
                 affectedTile.classList.remove("red-piece", "yellow-piece");
+
+                // Update currColumns als de verwijderde steen de laagste steen in de kolom was
+                if (currColumns[j] === i) {
+                    currColumns[j]--;
+                }
             }
         }
     }
@@ -213,10 +223,8 @@ function activateTileBomb(tile) {
 
 // Nieuwe functie: verwijdert enkel de aangeklikte tegel (tilebreaker) met animatie
 function activateTileBreaker(tile) {
-    // Voeg de animatieklasse toe aan de tegel
     tile.classList.add("tile-breaker-animation");
-    
-    // Wacht tot de animatie is afgelopen (bijvoorbeeld 500ms) en verwijder dan de tegel
+
     setTimeout(() => {
         let coords = tile.id.split("-");
         let r = parseInt(coords[0]);
@@ -224,9 +232,13 @@ function activateTileBreaker(tile) {
         if (board[r][c] !== ' ') {
             board[r][c] = ' ';
             tile.classList.remove("red-piece", "yellow-piece");
+
+            // Update currColumns als de verwijderde steen de laagste steen in de kolom was
+            if (currColumns[c] === r) {
+                currColumns[c]--;
+            }
         }
         applyGravity();
-        // Verwijder de animatieklasse zodat deze de volgende keer opnieuw kan worden getriggerd
         tile.classList.remove("tile-breaker-animation");
     }, 500);
 }
@@ -265,6 +277,63 @@ function shuffleColumn(colIndex) {
     displayMessage("Kolom " + (colIndex + 1) + " is gehusseld!");
 }
 
+// Verwijdert een willekeurige kolom
+function activateColumnRemover() {
+    let col = Math.floor(Math.random() * columns);
+    for (let r = 0; r < rows; r++) {
+        board[r][col] = ' ';
+        let tile = document.getElementById(r + "-" + col);
+        tile.classList.remove("red-piece", "yellow-piece");
+    }
+    currColumns[col] = rows - 1; // Reset de beschikbare rij in deze kolom
+    updateVisualBoard();
+    displayMessage("Kolom " + (col + 1) + " is verwijderd!");
+}
+
+// Verwijdert een willekeurige rij
+function activateRowRemover() {
+    let row = Math.floor(Math.random() * rows);
+    for (let c = 0; c < columns; c++) {
+        board[row][c] = ' ';
+        let tile = document.getElementById(row + "-" + c);
+        tile.classList.remove("red-piece", "yellow-piece");
+
+        // Update currColumns als de verwijderde steen de laagste steen in de kolom was
+        if (currColumns[c] === row) {
+            currColumns[c]--;
+        }
+    }
+    updateVisualBoard();
+    displayMessage("Rij " + (row + 1) + " is verwijderd!");
+}
+
+// Wisselt alle stenen van de huidige speler naar de andere kleur
+function activateColorSwitcher() {
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            if (board[r][c] === playerRed) {
+                board[r][c] = playerYellow;
+                let tile = document.getElementById(r + "-" + c);
+                tile.classList.add("color-switch-animation");
+                setTimeout(() => {
+                    tile.classList.remove("red-piece", "color-switch-animation");
+                    tile.classList.add("yellow-piece");
+                }, 500);
+            } else if (board[r][c] === playerYellow) {
+                board[r][c] = playerRed;
+                let tile = document.getElementById(r + "-" + c);
+                tile.classList.add("color-switch-animation");
+                setTimeout(() => {
+                    tile.classList.remove("yellow-piece", "color-switch-animation");
+                    tile.classList.add("red-piece");
+                }, 500);
+            }
+        }
+    }
+    updateVisualBoard();
+    displayMessage("Alle stenen zijn van kleur omgedraaid!");
+}
+
 // Dynamisch bericht weergeven in de indicator met een timeout waarin klikken niet mogelijk is
 function displayMessage(msg) {
     let indicator = document.getElementById("power-up-indicator");
@@ -297,5 +366,11 @@ function triggerRandomPower() {
     } else if (rand < 0.50) {
         let col = Math.floor(Math.random() * columns);
         shuffleColumn(col);
+    } else if (rand < 0.60) {
+        activateColumnRemover();
+    } else if (rand < 0.70) {
+        activateRowRemover();
+    } else if (rand < 0.80) {
+        activateColorSwitcher();
     }
 }

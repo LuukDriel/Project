@@ -1,3 +1,4 @@
+/* Algemene styling */
 body {
     margin: 0;
     padding: 0;
@@ -6,9 +7,10 @@ body {
     background-color: #f8f9fa;
 }
 
+/* Spelbord styling */
 #board {
-    max-width: 630px;px;
-    height: 540px;;
+    max-width: 630px;
+    height: 540px;
     background-color: blue;
     border: 10px solid navy;
     margin: 20px auto;
@@ -17,6 +19,7 @@ body {
     overflow: hidden;
 }
 
+/* Tegel styling */
 .tile {
     height: 70px;
     width: 70px;
@@ -27,6 +30,7 @@ body {
     cursor: pointer;
 }
 
+/* Stenen styling */
 .red-piece {
     background-color: red;
 }
@@ -35,6 +39,7 @@ body {
     background-color: yellow;
 }
 
+/* Power-up indicator styling */
 .power-up-indicator {
     position: fixed;
     top: 20px;
@@ -43,21 +48,89 @@ body {
     padding: 15px 30px;
     font-size: 1.2em;
     z-index: 1050;
+    background-color: #ffc107;
+    border: 2px solid #ff9800;
+    border-radius: 5px;
+    color: #000;
 }
 
-/* Animatie voor een individuele tegel (tilebreaker) */
+/* Tile Breaker Animatie */
 .tile-breaker-animation {
     animation: tileBreakerBlink 0.5s ease-out forwards;
-}
-
-/* Visuele indicator voor een actieve tilebreaker power-up op het bord */
-.tile-breaker-active {
-    animation: tileBreakerBlink 1s infinite;
-    border: 2px dashed red;
 }
 
 @keyframes tileBreakerBlink {
     0% { background-color: inherit; }
     50% { background-color: red; }
     100% { background-color: inherit; }
+}
+
+/* Tile Bomb Animatie */
+.tile-bomb-animation {
+    animation: tileBombExplosion 0.5s ease-out forwards;
+}
+
+@keyframes tileBombExplosion {
+    0% {
+        transform: scale(1);
+        background-color: orange;
+    }
+    50% {
+        transform: scale(1.5);
+        background-color: red;
+    }
+    100% {
+        transform: scale(1);
+        background-color: white;
+    }
+}
+
+/* Kolom Verwijderaar Animatie */
+.column-remover-animation {
+    animation: columnSlideOut 0.8s ease-out forwards;
+}
+
+@keyframes columnSlideOut {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+/* Rij Verwijderaar Animatie */
+.row-remover-animation {
+    animation: rowSlideOut 0.8s ease-out forwards;
+}
+
+@keyframes rowSlideOut {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Kleur Wisselaar Animatie */
+.color-switch-animation {
+    animation: colorSwitch 0.5s ease-in-out forwards;
+}
+
+@keyframes colorSwitch {
+    0% {
+        transform: rotateY(0deg);
+    }
+    50% {
+        transform: rotateY(90deg);
+        background-color: gray;
+    }
+    100% {
+        transform: rotateY(0deg);
+    }
 }
